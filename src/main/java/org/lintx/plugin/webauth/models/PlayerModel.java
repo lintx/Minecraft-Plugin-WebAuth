@@ -21,11 +21,15 @@ public class PlayerModel {
     }
 
     public PlayerModel(String username,String password){
+        this(username,password,Utils.newUUID());
+    }
+
+    public PlayerModel(String username,String password,UUID uuid){
         setSlat(Utils.sha1(Utils.newToken()));
         setUsername(username);
         setName(username);
         updatePassword(password);
-        setUuid(Utils.newUUID());
+        setUuid(uuid);
         setToken("");
         setToken_time(LocalDateTime.now());
     }

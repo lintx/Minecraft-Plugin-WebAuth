@@ -26,6 +26,14 @@ public class Utils {
         return "=" + str + "=";
     }
 
+    public static String newPassword(){
+        //14*4=56,4位字节会换成一位字符串
+        UUID uuid = UUID.randomUUID();
+        long hi = 1L << 40;
+        long val = uuid.getLeastSignificantBits();
+        return Long.toHexString(hi | (val & (hi - 1))).substring(1);
+    }
+
     public static String sha1(String string){
         try {
             MessageDigest messageDigest = MessageDigest.getInstance("SHA1");

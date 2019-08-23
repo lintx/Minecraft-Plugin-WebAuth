@@ -54,6 +54,27 @@ public class Model {
         return null;
     }
 
+    public PlayerModel getPlayerWithUUID(UUID uuid){
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            conn = sql.getSQLConnection();
+            ps = conn.prepareStatement("SELECT * FROM webauth_player WHERE uuid=? LIMIT 1");
+            ps.setString(1,uuid.toString());
+
+            rs = ps.executeQuery();
+            while(rs.next()){
+                return playerModelWithResultSet(rs);
+            }
+        } catch (SQLException ignored) {
+
+        } finally {
+            release(conn,ps,rs);
+        }
+        return null;
+    }
+
     public PlayerModel getPlayerWithToken(String token){
         Connection conn = null;
         PreparedStatement ps = null;
@@ -152,6 +173,9 @@ public class Model {
     }
 
     public boolean insertPlayer(PlayerModel model){
+        if (getPlayerWithUUID(model.getUuid())!=null){
+            return false;
+        }
         Connection conn = null;
         PreparedStatement ps = null;
         try {
