@@ -1,0 +1,8 @@
+.idea
+libs
+target
+WebAuth.iml
+websource/.idea
+websource/node_modules
+websource/package-lock.json
+src/main/resources/web

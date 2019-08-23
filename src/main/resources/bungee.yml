@@ -1,0 +1,4 @@
+main: org.lintx.plugin.webauth.WebAuth
+name: WebAuth
+version: 1.0.0
+author: LinTx
