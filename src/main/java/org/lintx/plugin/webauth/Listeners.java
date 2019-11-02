@@ -43,6 +43,8 @@ public class Listeners implements Listener {
                     }
                 }else if (!model.tokenIsEffective()){
                     connection.disconnect(new TextComponent(config.formatMessage(config.getTokenIsExpired())));
+                }else if (!Pattern.matches(config.getPlayerNameRegexp(),model.getName())) {
+                    connection.disconnect(new TextComponent(config.formatMessage(config.getNameIsValid())));
                 }else {
                     try {
                         InitialHandler handler = (InitialHandler)event.getConnection();

@@ -24,4 +24,5 @@ public class Messages {
     static final String changePasswordFail = "修改密码失败，请重试";
     static final String refreshTokenSuccess = "刷新登录凭据成功";
     static final String refreshTokenFail = "刷新登录凭据失败，请重试";
+    static final String notMatchPlayerNameRegexp = "玩家名中含有不被允许的字符";
 }

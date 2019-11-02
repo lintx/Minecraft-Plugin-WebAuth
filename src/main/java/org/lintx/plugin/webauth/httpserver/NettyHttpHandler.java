@@ -16,6 +16,7 @@ import java.io.*;
 import java.net.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Locale;
+import java.util.regex.Pattern;
 
 public class NettyHttpHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
     private AsciiString htmlType = AsciiString.cached("text/html");
@@ -180,6 +181,10 @@ public class NettyHttpHandler extends SimpleChannelInboundHandler<FullHttpReques
                             }
                             if (inputModel.getPlayerName().getBytes().length>16){
                                 writeError(ctx,Messages.playerNameLong);
+                                return;
+                            }
+                            if (!Pattern.matches(Config.getInstance().getPlayerNameRegexp(),inputModel.getPlayerName())){
+                                writeError(ctx,Messages.notMatchPlayerNameRegexp);
                                 return;
                             }
                             if (!WebAuth.plugin.getModel().checkPlayerName(inputModel.getPlayerName())){
