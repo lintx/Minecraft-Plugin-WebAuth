@@ -41,6 +41,11 @@ tokenIsExpired: |-
   登录凭证已过期，请打开网页
   {url}
   重置凭证
+#玩家名中含有不允许的字符时，无法进入游戏的提示
+nameIsValid: |-
+  玩家名中含有不允许的字符，请打开网页
+  {url}
+  修改玩家名或联系管理员
 #插件web端网址，请自行修改为自己的网址
 tokenManageUrl: 'http://localhost:9000/'
 #数据库配置
@@ -54,7 +59,12 @@ databaseConfig:
 webPort: 9000      #玩家登录系统的web端口，1024以上（1024以下需要root权限），不能使用已经被占用的端口
 openRegister: false    #是否开放注册，开放注册后玩家可以自行在web端注册帐号并进入游戏
 openChangePlayername: false     #是否允许修改玩家名，允许修改后玩家可以自行在web端修改名字
+userNameRegexp: ^[a-zA-Z0-9\u4e00-\u9fa5]+$    #玩家名允许的规则，正则表达式，默认允许大小写英文字母、数字、中文，如果只允许大小写字母和数字，可以修改为^[a-zA-Z0-9]+$，对正则表达式不熟悉的不推荐修改这个配置
 ```
+关于mssql数据库配置：
+mysql的uri配置为jdbc:mysql://`localhost`:`3306`/`database`?autoReconnect=true&useSSL=false&characterEncoding=utf-8&useUnicode=true这样的格式
+其中，有3处需要修改，分别是`localhost`（数据地址，本机填localhost或127.0.0.1）、`3306`（数据库端口，mysql数据库默认端口为3306）和`database`（数据库名，请修改为自己的数据库名）
+
 
 
 #### 其他
