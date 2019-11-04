@@ -42,9 +42,7 @@ public class PlayerModel {
 
     public boolean tokenIsEffective(){
         if (token.equals("")) return false;
-        LocalDateTime now = LocalDateTime.now();
-        Duration duration = Duration.between(token_time,now);
-        return duration.toDays() < 7;
+        return token_time.isAfter(LocalDateTime.now());
     }
 
     public int getId() {
@@ -111,8 +109,12 @@ public class PlayerModel {
     }
 
     public void updateToken(String token){
+        updateToken(token,7);
+    }
+
+    public void updateToken(String token,int day){
         setToken(Utils.sha1(token));
-        setToken_time(LocalDateTime.now());
+        setToken_time(LocalDateTime.now().plusDays(day));
     }
 
     public LocalDateTime getToken_time() {
@@ -129,9 +131,5 @@ public class PlayerModel {
 
     public String getToken_timeString(){
         return Utils.dateTime2String(this.token_time);
-    }
-
-    public String getToken_expiredTimeString(){
-        return Utils.dateTime2String(this.token_time.plusDays(7));
     }
 }

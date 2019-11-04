@@ -33,28 +33,33 @@ public class Listeners implements Listener {
         boolean isToken = name.length() == 16 && name.startsWith("=") && name.endsWith("=");
         if (!connection.isOnlineMode() || isToken){
             if (event.getConnection() instanceof InitialHandler){
-                Config config = Config.getInstance();
-                PlayerModel model = auth.getModel().getPlayerWithToken(name);
-                if (model==null){
-                    if (isToken){
-                        connection.disconnect(new TextComponent(config.formatMessage(config.getTokenIsValid())));
+                try {
+                    Config config = Config.getInstance();
+                    PlayerModel model = auth.getModel().getPlayerWithToken(name);
+                    if (model==null){
+                        if (isToken){
+                            connection.disconnect(new TextComponent(config.formatMessage(config.getTokenIsValid())));
+                        }else {
+                            connection.disconnect(new TextComponent(config.formatMessage(config.getNotRegister())));
+                        }
+                    }else if (!model.tokenIsEffective()){
+                        connection.disconnect(new TextComponent(config.formatMessage(config.getTokenIsExpired())));
+                    }else if (!Pattern.matches(config.getPlayerNameRegexp(),model.getName())) {
+                        connection.disconnect(new TextComponent(config.formatMessage(config.getNameIsValid())));
                     }else {
-                        connection.disconnect(new TextComponent(config.formatMessage(config.getNotRegister())));
+                        try {
+                            InitialHandler handler = (InitialHandler)event.getConnection();
+                            handler.setOnlineMode(false);
+                            handler.getLoginRequest().setData(model.getName());
+                            handler.setUniqueId(model.getUuid());
+                        }catch (Error | Exception e){
+                            e.printStackTrace();
+                            connection.disconnect(new TextComponent(Message.notSupport));
+                        }
                     }
-                }else if (!model.tokenIsEffective()){
-                    connection.disconnect(new TextComponent(config.formatMessage(config.getTokenIsExpired())));
-                }else if (!Pattern.matches(config.getPlayerNameRegexp(),model.getName())) {
-                    connection.disconnect(new TextComponent(config.formatMessage(config.getNameIsValid())));
-                }else {
-                    try {
-                        InitialHandler handler = (InitialHandler)event.getConnection();
-                        handler.setOnlineMode(false);
-                        handler.getLoginRequest().setData(model.getName());
-                        handler.setUniqueId(model.getUuid());
-                    }catch (Error | Exception e){
-                        e.printStackTrace();
-                        connection.disconnect(new TextComponent(Message.notSupport));
-                    }
+                }catch (Error | Exception e){
+                    e.printStackTrace();
+                    connection.disconnect(new TextComponent(Message.loginError));
                 }
             }else {
                 connection.disconnect(new TextComponent(Message.notSupport));

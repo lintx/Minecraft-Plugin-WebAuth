@@ -2,6 +2,7 @@ package org.lintx.plugin.webauth;
 
 import com.google.common.base.Charsets;
 import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.plugin.Command;
 import org.lintx.plugin.webauth.models.PlayerModel;
@@ -62,7 +63,7 @@ public class Commands extends Command {
                         return;
                     }
                     PlayerModel model = null;
-                    Pattern pattern = Pattern.compile("\\d+");
+                    Pattern pattern = Pattern.compile("^\\d+$");
                     Matcher isNum = pattern.matcher(_id);
                     if (isNum.matches()){
                         int id = Integer.parseInt(_id);
@@ -119,6 +120,22 @@ public class Commands extends Command {
                             sender.sendMessage(new TextComponent(Message.playerNameUpdateSuccess));
                             sender.sendMessage(new TextComponent(Message.playerInfo(model)));
                             return;
+                        }else if (action.equalsIgnoreCase("token")){
+                            if (val.equalsIgnoreCase("refresh")){
+                                int day = 7;
+                                if (args.length>=5 && pattern.matcher(args[4]).matches()){
+                                    day = Integer.parseInt(args[4]);
+                                }
+                                String token = Utils.newToken();
+                                model.updateToken(token,day);
+                                auth.getModel().updatePlayer(model);
+                                String text = Message.tokenUpdateSuccess.replaceAll("\\{token\\}",token);
+                                text = text.replaceAll("\\{expire_time\\}",model.getToken_timeString());
+                                TextComponent message = new TextComponent(text);
+                                message.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND,token));
+                                sender.sendMessage(message);
+                                return;
+                            }
                         }
                     }else {
                         sender.sendMessage(new TextComponent(Message.playerInfo(model)));

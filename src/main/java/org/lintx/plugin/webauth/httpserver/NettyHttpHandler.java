@@ -65,8 +65,7 @@ public class NettyHttpHandler extends SimpleChannelInboundHandler<FullHttpReques
                     }catch (Exception ignored){
                     }
 
-                    InetAddress address = ((InetSocketAddress)ctx.channel().remoteAddress()).getAddress();
-                    String ip = address.getHostAddress();
+                    String ip = getIP(ctx,request);
 
                     if (!Caches.canLogin(ip)){
                         writeError(ctx,Messages.ipLoginFail);
@@ -84,7 +83,7 @@ public class NettyHttpHandler extends SimpleChannelInboundHandler<FullHttpReques
                             if (model!=null){
                                 outputModel.setUserId(model.getId());
                                 outputModel.setPlayerName(model.getName());
-                                outputModel.setUserTokenTime(model.getToken_expiredTimeString());
+                                outputModel.setUserTokenTime(model.getToken_timeString());
 
                                 if (!model.tokenIsEffective()){
                                     refreshPlayerToken(ctx,model,outputModel);
@@ -155,7 +154,7 @@ public class NettyHttpHandler extends SimpleChannelInboundHandler<FullHttpReques
                                 model = WebAuth.plugin.getModel().getPlayerWithId(model.getId());
                                 Caches.refreshLogin(token,model);
                             }else {
-                                outputModel.setUserTokenTime(model.getToken_expiredTimeString());
+                                outputModel.setUserTokenTime(model.getToken_timeString());
                                 writeModel(ctx,outputModel);
                             }
                             return;
@@ -220,7 +219,7 @@ public class NettyHttpHandler extends SimpleChannelInboundHandler<FullHttpReques
                             model.updateToken(playerToken);
                             if (WebAuth.plugin.getModel().updatePlayer(model)){
                                 outputModel.setUserToken(playerToken);
-                                outputModel.setUserTokenTime(model.getToken_expiredTimeString());
+                                outputModel.setUserTokenTime(model.getToken_timeString());
                                 outputModel.setCode(1);
                                 outputModel.setMessage(Messages.refreshTokenSuccess);
                                 model = WebAuth.plugin.getModel().getPlayerWithId(model.getId());
@@ -325,7 +324,7 @@ public class NettyHttpHandler extends SimpleChannelInboundHandler<FullHttpReques
         model.updateToken(playerToken);
         if (plugin.getModel().updatePlayer(model)){
             outputModel.setUserToken(playerToken);
-            outputModel.setUserTokenTime(model.getToken_expiredTimeString());
+            outputModel.setUserTokenTime(model.getToken_timeString());
         }
         writeModel(ctx,outputModel);
     }
@@ -363,5 +362,18 @@ public class NettyHttpHandler extends SimpleChannelInboundHandler<FullHttpReques
         heads.add(HttpHeaderNames.CONTENT_LENGTH, response.content().readableBytes());
         heads.add(HttpHeaderNames.CONNECTION, HttpHeaderValues.KEEP_ALIVE);
         ctx.write(response);
+    }
+
+    private String getIP(ChannelHandlerContext ctx, FullHttpRequest request){
+        String ip = request.headers().get("X-Forwarded-For");
+        if (ip==null){
+            InetAddress address = ((InetSocketAddress)ctx.channel().remoteAddress()).getAddress();
+            ip = address.getHostAddress();
+        }else {
+            if (ip.contains(",")){
+                ip = ip.substring(0,ip.indexOf(","));
+            }
+        }
+        return ip;
     }
 }
