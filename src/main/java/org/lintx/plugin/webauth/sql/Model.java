@@ -1,5 +1,6 @@
 package org.lintx.plugin.webauth.sql;
 
+import org.lintx.plugin.webauth.Config;
 import org.lintx.plugin.webauth.models.PlayerModel;
 import org.lintx.plugin.webauth.utils.Utils;
 
@@ -27,8 +28,10 @@ public class Model {
             model.setToken(rs.getString("token"));
             model.setToken_timeString(rs.getString("token_time"));
             return model;
-        } catch (SQLException ignored) {
-
+        } catch (SQLException e) {
+            if (Config.getInstance().getDatabaseConfig().isPrintError()){
+                e.printStackTrace();
+            }
         }
         return null;
     }
@@ -46,8 +49,10 @@ public class Model {
             while(rs.next()){
                 return playerModelWithResultSet(rs);
             }
-        } catch (SQLException ignored) {
-
+        } catch (SQLException e) {
+            if (Config.getInstance().getDatabaseConfig().isPrintError()){
+                e.printStackTrace();
+            }
         } finally {
             release(conn,ps,rs);
         }
@@ -67,8 +72,10 @@ public class Model {
             while(rs.next()){
                 return playerModelWithResultSet(rs);
             }
-        } catch (SQLException ignored) {
-
+        } catch (SQLException e) {
+            if (Config.getInstance().getDatabaseConfig().isPrintError()){
+                e.printStackTrace();
+            }
         } finally {
             release(conn,ps,rs);
         }
@@ -88,8 +95,10 @@ public class Model {
             while(rs.next()){
                 return playerModelWithResultSet(rs);
             }
-        } catch (SQLException ignored) {
-
+        } catch (SQLException e) {
+            if (Config.getInstance().getDatabaseConfig().isPrintError()){
+                e.printStackTrace();
+            }
         } finally {
             release(conn,ps,rs);
         }
@@ -109,8 +118,10 @@ public class Model {
             while(rs.next()){
                 return playerModelWithResultSet(rs);
             }
-        } catch (SQLException ignored) {
-
+        } catch (SQLException e) {
+            if (Config.getInstance().getDatabaseConfig().isPrintError()){
+                e.printStackTrace();
+            }
         } finally {
             release(conn,ps,rs);
         }
@@ -130,8 +141,10 @@ public class Model {
             while(rs.next()){
                 return playerModelWithResultSet(rs);
             }
-        } catch (SQLException ignored) {
-
+        } catch (SQLException e) {
+            if (Config.getInstance().getDatabaseConfig().isPrintError()){
+                e.printStackTrace();
+            }
         } finally {
             release(conn,ps,rs);
         }
@@ -153,8 +166,10 @@ public class Model {
 
             int r =  ps.executeUpdate();
             return r>0;
-        } catch (SQLException ignored) {
-
+        } catch (SQLException e) {
+            if (Config.getInstance().getDatabaseConfig().isPrintError()){
+                e.printStackTrace();
+            }
         } finally {
             release(conn,ps,null);
         }
@@ -191,8 +206,10 @@ public class Model {
 
             int r =  ps.executeUpdate();
             return r>0;
-        } catch (SQLException ignored) {
-
+        } catch (SQLException e) {
+            if (Config.getInstance().getDatabaseConfig().isPrintError()){
+                e.printStackTrace();
+            }
         } finally {
             release(conn,ps,null);
         }
@@ -203,22 +220,28 @@ public class Model {
         if (rs != null) {
             try {
                 rs.close();
-            } catch (Exception ignored) {
-
+            } catch (Exception e) {
+                if (Config.getInstance().getDatabaseConfig().isPrintError()){
+                    e.printStackTrace();
+                }
             }
         }
         if (ps != null) {
             try {
                 ps.close();
-            } catch (Exception ignored) {
-
+            } catch (Exception e) {
+                if (Config.getInstance().getDatabaseConfig().isPrintError()){
+                    e.printStackTrace();
+                }
             }
         }
         if (conn != null) {
             try {
                 conn.close();
-            } catch (Exception ignored) {
-
+            } catch (Exception e) {
+                if (Config.getInstance().getDatabaseConfig().isPrintError()){
+                    e.printStackTrace();
+                }
             }
         }
     }

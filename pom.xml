@@ -6,9 +6,72 @@
 
     <groupId>org.lintx.plugin</groupId>
     <artifactId>WebAuth</artifactId>
-    <version>1.3.0-SNAPSHOT</version>
+    <version>1.4</version>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.1.0</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <relocations>
+                                <relocation>
+                                    <pattern>org.bstats</pattern>
+                                    <shadedPattern>org.lintx.plugins.webauth.maven.bstats</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>org.lintx.plugins.modules</pattern>
+                                    <shadedPattern>org.lintx.plugins.webauth.maven.modules</shadedPattern>
+                                </relocation>
+                            </relocations>
+                            <minimizeJar>true</minimizeJar>
+                            <artifactSet>
+                                <includes>
+                                    <include>org.bstats</include>
+                                    <include>org.lintx.plugins.modules</include>
+                                </includes>
+                            </artifactSet>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+        <resources>
+            <resource>
+                <filtering>true</filtering>
+                <directory>src/main/resources</directory>
+            </resource>
+        </resources>
+    </build>
+    <repositories>
+        <repository>
+            <id>CodeMC</id>
+            <url>https://repo.codemc.io/repository/maven-public/</url>
+        </repository>
+    </repositories>
     <dependencies>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.16.16</version>
+            <scope>provided</scope>
+        </dependency>
         <dependency>
             <groupId>net.md-5.bungee</groupId>
             <artifactId>BungeeCord</artifactId>
@@ -16,17 +79,23 @@
             <scope>system</scope>
             <systemPath>${project.basedir}/libs/BungeeCord.jar</systemPath>
         </dependency>
-        <dependency>
-            <groupId>org.lintx.plugins.modules</groupId>
-            <artifactId>Configure</artifactId>
-            <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/libs/Configure-1.2.3-SNAPSHOT.jar</systemPath>
-        </dependency>
 <!--        <dependency>-->
 <!--            <groupId>org.lintx.plugins.modules</groupId>-->
 <!--            <artifactId>Configure</artifactId>-->
-<!--            <version>1.2.1-SNAPSHOT</version>-->
+<!--            <version>1.0</version>-->
+<!--            <scope>system</scope>-->
+<!--            <systemPath>${project.basedir}/libs/Configure-1.2.3-SNAPSHOT.jar</systemPath>-->
 <!--        </dependency>-->
+        <dependency>
+            <groupId>org.bstats</groupId>
+            <artifactId>bstats-bungeecord</artifactId>
+            <version>1.5</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.lintx.plugins.modules</groupId>
+            <artifactId>Configure</artifactId>
+            <version>1.2.3-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 </project>

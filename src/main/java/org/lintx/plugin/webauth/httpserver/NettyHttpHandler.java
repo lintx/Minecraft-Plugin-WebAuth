@@ -10,6 +10,7 @@ import io.netty.util.AsciiString;
 import org.lintx.plugin.webauth.Config;
 import org.lintx.plugin.webauth.WebAuth;
 import org.lintx.plugin.webauth.models.PlayerModel;
+import org.lintx.plugin.webauth.utils.MojangApi;
 import org.lintx.plugin.webauth.utils.Utils;
 
 import java.io.*;
@@ -125,6 +126,14 @@ public class NettyHttpHandler extends SimpleChannelInboundHandler<FullHttpReques
                             writeError(ctx,Messages.usernameRepeat);
                             Caches.loginFail(ip);
                             return;
+                        }
+                        if (Config.getInstance().isCheckPlayerNameFromMojang()){
+                            MojangApi.MojangAccount account = MojangApi.getMojangAccount(inputModel.getUsername());
+                            if (!account.checkName(inputModel.getUsername())){
+                                writeError(ctx,Messages.usernameInMojang);
+                                Caches.loginFail(ip);
+                                return;
+                            }
                         }
                         model = new PlayerModel(inputModel.getUsername(),inputModel.getPassword());
                         if (WebAuth.plugin.getModel().insertPlayer(model)){

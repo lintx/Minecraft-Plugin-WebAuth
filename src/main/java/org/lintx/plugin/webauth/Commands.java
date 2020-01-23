@@ -1,11 +1,13 @@
 package org.lintx.plugin.webauth;
 
-import com.google.common.base.Charsets;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.plugin.Command;
+import org.lintx.plugin.webauth.httpserver.Caches;
+import org.lintx.plugin.webauth.httpserver.Messages;
 import org.lintx.plugin.webauth.models.PlayerModel;
+import org.lintx.plugin.webauth.utils.MojangApi;
 import org.lintx.plugin.webauth.utils.Utils;
 
 import java.io.*;
@@ -48,8 +50,22 @@ public class Commands extends Command {
                                 sender.sendMessage(new TextComponent(Message.playerNameLong));
                                 return;
                             }
+
                             String password = args[3];
                             PlayerModel model = new PlayerModel(username,password);
+                            if (Config.getInstance().isCheckPlayerNameFromMojang()){
+                                MojangApi.MojangAccount account = MojangApi.getMojangAccount(username);
+                                if (!account.checkName(username)){
+                                    if (args.length == 4 || (!args[4].equalsIgnoreCase("confirm") && !args[4].equalsIgnoreCase("ignore"))){
+                                        sender.sendMessage(new TextComponent(Message.addMojangPlayer.replaceAll("\\{name\\}",username).replaceAll("\\{uuid\\}",account.id)));
+                                        return;
+                                    }
+                                    if (args[4].equalsIgnoreCase("confirm")){
+                                        model.setUuid(account.getUUID());
+                                    }
+                                }
+                            }
+
                             if (auth.getModel().insertPlayer(model)){
                                 model = auth.getModel().getPlayerWithPlayerName(username);
                                 sender.sendMessage(new TextComponent(Message.addPlayerSuccess));

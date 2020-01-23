@@ -16,6 +16,26 @@ public class DatabaseConfig {
     private String mysqlUser = "root";
     @YamlConfig
     private String mysqlPassword = "root";
+    @YamlConfig
+    private boolean printError = false;
+    @YamlConfig
+    private long timeout = 60 * 60 * 5;
+
+    public long getTimeout() {
+        return timeout;
+    }
+
+    public void setTimeout(long timeout) {
+        this.timeout = timeout;
+    }
+
+    public boolean isPrintError() {
+        return printError;
+    }
+
+    public void setPrintError(boolean printError) {
+        this.printError = printError;
+    }
 
     public DatabaseType getType() {
         return type;

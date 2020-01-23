@@ -5,6 +5,7 @@ public class Messages {
     static final String usernameShort = "用户名太短（不能小于4字符）";
     static final String usernameLong = "用户名太长（不能大于16字符）";
     static final String usernameRepeat = "用户名重复";
+    static final String usernameInMojang = "存在同名正版帐号";
     static final String playerNameRepeat = "玩家名重复";
     static final String playerNameShort = "玩家名太短（不能小于4字符）";
     static final String playerNameLong = "玩家名太长（不能大于16字符）";

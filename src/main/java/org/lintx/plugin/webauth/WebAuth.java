@@ -2,6 +2,7 @@ package org.lintx.plugin.webauth;
 
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.api.scheduler.ScheduledTask;
+import org.bstats.bungeecord.Metrics;
 import org.lintx.plugin.webauth.config.DatabaseConfig;
 import org.lintx.plugin.webauth.httpserver.Caches;
 import org.lintx.plugin.webauth.httpserver.NettyHttpServer;
@@ -33,6 +34,8 @@ public class WebAuth extends Plugin {
 
         getProxy().getPluginManager().registerListener(this,new Listeners(this));
         getProxy().getPluginManager().registerCommand(this,new Commands(this,"webauth",null,"auth","wa"));
+
+        Metrics metrics = new Metrics(this);
     }
 
     @Override
@@ -128,7 +131,7 @@ public class WebAuth extends Plugin {
             if (mySql!=null){
                 mySql.close();
             }
-            mySql = new MySql(config.getDatabaseConfig().getMysqlUri(),config.getDatabaseConfig().getMysqlUser(),config.getDatabaseConfig().getMysqlPassword());
+            mySql = new MySql(config.getDatabaseConfig().getMysqlUri(),config.getDatabaseConfig().getMysqlUser(),config.getDatabaseConfig().getMysqlPassword(),config.getDatabaseConfig().getTimeout());
             model = new Model(mySql);
         }else {
             sqLite = new SQLite(getDataFolder(),"database");

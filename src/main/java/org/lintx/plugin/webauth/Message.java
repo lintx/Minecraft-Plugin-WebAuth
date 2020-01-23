@@ -30,6 +30,9 @@ public class Message {
     static final String passwordUpdateSuccess = "§a密码更新成功";
     static final String addPlayerFail = "§c新增玩家失败";
     static final String addPlayerSuccess = "§a新增玩家成功";
+    static final String addMojangPlayer = "§a新增玩家{name}经查询是正版玩家，UUID为{uuid}。\n" +
+            "§a新增并设置UUID为正版UUID请输入命令§b/webauth player add {name} 密码 confirm\n" +
+            "§a新增并不设置UUID为正版UUID请输入命令§b/webauth player add {name} 密码 ignore";
     static final String playerNameRepeat = "§c玩家用户名或玩家名重复";
     static final String reloadConfig = "§a重新加载配置文件";
     static final String playerNameShort = "§c玩家名太短（不能小于4字符）";
